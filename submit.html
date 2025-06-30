@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Your Experience - Social Proof Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #38beba;
+            --accent-hover: #2a9a96;
+            --accent-light: rgba(56, 190, 186, 0.1);
+            --primary: #1a202c;
+            --text: #2d3748;
+            --text-light: #718096;
+            --text-muted: #a0aec0;
+            --background: #f7fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --radius-lg: 16px;
+            --success: #48bb78;
+            --error: #f56565;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--background) 0%, #e6fffa 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: white;
+            padding: 40px 32px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 40px 32px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 14px;
+            background: var(--surface);
+            color: var(--text);
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .rating-group {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .rating-label {
+            display: block;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 16px;
+            font-size: 16px;
+        }
+
+        .rating-stars {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .rating-stars span {
+            color: var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .rating-stars span:hover,
+        .rating-stars span.active {
+            color: #ffc107;
+            transform: scale(1.1);
+            background: rgba(255, 193, 7, 0.1);
+        }
+
+        .rating-text {
+            font-size: 14px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .photo-upload {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 32px 16px;
+            text-align: center;
+            background: var(--background);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .photo-upload:hover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .photo-upload.dragover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .photo-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 16px;
+            display: none;
+        }
+
+        .photo-upload-icon {
+            font-size: 32px;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .photo-upload-text {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .photo-upload input[type="file"] {
+            display: none;
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: var(--radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(56, 190, 186, 0.3);
+        }
+
+        .submit-btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .success-message,
+        .error-message {
+            padding: 16px 20px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message {
+            background: rgba(72, 187, 120, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(72, 187, 120, 0.3);
+        }
+
+        .error-message {
+            background: rgba(245, 101, 101, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(245, 101, 101, 0.3);
+        }
+
+        .privacy-notice {
+            background: var(--background);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-top: 24px;
+            font-size: 13px;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: var(--radius);
+            }
+            
+            .header {
+                padding: 32px 24px;
+            }
+            
+            .form-container {
+                padding: 32px 24px;
+            }
+            
+            .rating-stars {
+                font-size: 28px;
+                gap: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="submission-form">
+        <div class="header">
+            <h1>Share Your Experience</h1>
+            <p>Help others discover what makes us special</p>
+        </div>
+
+        <div class="form-container">
+            <div class="success-message" id="success-message">
+                <i class="fas fa-check-circle"></i>
+                Thank you for your testimonial! We'll review it and get back to you soon.
+            </div>
+
+            <div class="error-message" id="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="error-text">Something went wrong. Please try again.</span>
+            </div>
+
+            <form id="testimonial-form">
+                <div class="rating-group">
+                    <label class="rating-label">How would you rate your experience?</label>
+                    <div class="rating-stars" id="rating-stars">
+                        <span data-value="1"><i class="far fa-star"></i></span>
+                        <span data-value="2"><i class="far fa-star"></i></span>
+                        <span data-value="3"><i class="far fa-star"></i></span>
+                        <span data-value="4"><i class="far fa-star"></i></span>
+                        <span data-value="5"><i class="far fa-star"></i></span>
+                    </div>
+                    <div class="rating-text" id="rating-text">Click to rate</div>
+                    <input type="hidden" id="rating-value" name="rating" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="testimonial">Share your experience *</label>
+                    <textarea 
+                        id="testimonial" 
+                        name="testimonial" 
+                        placeholder="Tell us about your experience with our product or service..."
+                        required
+                        maxlength="1000"
+                    ></textarea>
+                    <div class="char-count">
+                        <span id="char-count">0</span>/1000 characters
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Your Name *</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        placeholder="John Smith"
+                        required
+                        maxlength="255"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="title">Your Title/Position</label>
+                    <input 
+                        type="text" 
+                        id="title" 
+                        name="title" 
+                        placeholder="Marketing Director at Company Inc."
+                        maxlength="255"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="john@example.com"
+                    >
+                    <small style="color: var(--text-muted); font-size: 12px;">
+                        Optional - We'll only use this to contact you about your testimonial
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label>Profile Photo (Optional)</label>
+                    <div class="photo-upload" id="photo-upload">
+                        <img id="photo-preview" class="photo-preview" alt="Preview">
+                        <div class="photo-upload-icon">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <div class="photo-upload-text">
+                            Click to upload or drag & drop your photo<br>
+                            <small>JPG, PNG, GIF up to 5MB</small>
+                        </div>
+                        <input type="file" id="photo-input" accept="image/*">
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submit-btn">
+                    <span class="loading-spinner" id="loading-spinner"></span>
+                    <i class="fas fa-paper-plane" id="submit-icon"></i>
+                    <span id="submit-text">Submit Testimonial</span>
+                </button>
+
+                <div class="privacy-notice">
+                    <i class="fas fa-shield-alt"></i>
+                    Your information is secure and will only be used to display your testimonial. 
+                    We respect your privacy and won't share your details with third parties.
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Include Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Include EmailJS for notifications -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- Include configuration -->
+    <script src="config.js"></script>
+    
+    <script>
+        class TestimonialSubmission {
+            constructor() {
+                this.supabase = null;
+                this.currentRating = 0;
+                this.uploadedImageUrl = null;
+                
+                this.initSupabase();
+                this.initElements();
+                this.initEventListeners();
+                this.initEmailJS();
+            }
+
+            initSupabase() {
+                if (window.SUPABASE_CONFIG) {
+                    this.supabase = supabase.createClient(
+                        window.SUPABASE_CONFIG.url, 
+                        window.SUPABASE_CONFIG.anonKey
+                    );
+                }
+            }
+
+            initEmailJS() {
+                if (window.EMAIL_CONFIG && window.EMAIL_CONFIG.emailjsConfig.publicKey) {
+                    emailjs.init(window.EMAIL_CONFIG.emailjsConfig.publicKey);
+                }
+            }
+
+            initElements() {
+                this.form = document.getElementById('testimonial-form');
+                this.ratingStars = document.querySelectorAll('#rating-stars span');
+                this.ratingValue = document.getElementById('rating-value');
+                this.ratingText = document.getElementById('rating-text');
+                this.testimonialText = document.getElementById('testimonial');
+                this.charCount = document.getElementById('char-count');
+                this.nameInput = document.getElementById('name');
+                this.titleInput = document.getElementById('title');
+                this.emailInput = document.getElementById('email');
+                this.photoUpload = document.getElementById('photo-upload');
+                this.photoInput = document.getElementById('photo-input');
+                this.photoPreview = document.getElementById('photo-preview');
+                this.submitBtn = document.getElementById('submit-btn');
+                this.submitText = document.getElementById('submit-text');
+                this.submitIcon = document.getElementById('submit-icon');
+                this.loadingSpinner = document.getElementById('loading-spinner');
+                this.successMessage = document.getElementById('success-message');
+                this.errorMessage = document.getElementById('error-message');
+                this.errorText = document.getElementById('error-text');
+            }
+
+            initEventListeners() {
+                // Rating stars
+                this.ratingStars.forEach(star => {
+                    star.addEventListener('click', () => {
+                        this.setRating(parseInt(star.dataset.value));
+                    });
+                });
+
+                // Character count
+                this.testimonialText.addEventListener('input', () => {
+                    this.updateCharCount();
+                });
+
+                // Photo upload
+                this.photoUpload.addEventListener('click', () => {
+                    this.photoInput.click();
+                });
+
+                this.photoInput.addEventListener('change', (e) => {
+                    this.handlePhotoUpload(e.target.files[0]);
+                });
+
+                // Drag and drop
+                this.photoUpload.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    this.photoUpload.classList.add('dragover');
+                });
+
+                this.photoUpload.addEventListener('dragleave', () => {
+                    this.photoUpload.classList.remove('dragover');
+                });
+
+                this.photoUpload.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    this.photoUpload.classList.remove('dragover');
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        this.handlePhotoUpload(file);
+                    }
+                });
+
+                // Form submission
+                this.form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.submitTestimonial();
+                });
+            }
+
+            setRating(value) {
+                this.currentRating = value;
+                this.ratingValue.value = value;
+                
+                // Update star display
+                this.ratingStars.forEach((star, index) => {
+                    const icon = star.querySelector('i');
+                    if (index < value) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        star.classList.add('active');
+                    } else {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        star.classList.remove('active');
+                    }
+                });
+
+                // Update rating text
+                const ratingTexts = {
+                    1: 'Poor - We can do better',
+                    2: 'Fair - Room for improvement',
+                    3: 'Good - Meeting expectations',
+                    4: 'Very Good - Above expectations',
+                    5: 'Excellent - Exceeded expectations!'
+                };
+                this.ratingText.textContent = ratingTexts[value];
+            }
+
+            updateCharCount() {
+                const count = this.testimonialText.value.length;
+                this.charCount.textContent = count;
+                
+                if (count > 800) {
+                    this.charCount.style.color = '#f56565';
+                } else if (count > 600) {
+                    this.charCount.style.color = '#f6ad55';
+                } else {
+                    this.charCount.style.color = '#a0aec0';
+                }
+            }
+
+            async handlePhotoUpload(file) {
+                if (!file) return;
+
+                // Validate file
+                if (!file.type.startsWith('image/')) {
+                    this.showError('Please select a valid image file');
+                    return;
+                }
+
+                if (file.size > 5 * 1024 * 1024) {
+                    this.showError('Image must be smaller than 5MB');
+                    return;
+                }
+
+                try {
+                    // Show preview
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.photoPreview.src = e.target.result;
+                        this.photoPreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+
+                    // Upload to Supabase Storage (if configured)
+                    if (this.supabase) {
+                        const fileName = `avatar-${Date.now()}-${file.name}`;
+                        const { data, error } = await this.supabase.storage
+                            .from('testimonial-images')
+                            .upload(fileName, file);
+
+                        if (error) throw error;
+
+                        // Get public URL
+                        const { data: urlData } = this.supabase.storage
+                            .from('testimonial-images')
+                            .getPublicUrl(fileName);
+                        
+                        this.uploadedImageUrl = urlData.publicUrl;
+                    }
+                } catch (error) {
+                    console.error('Error uploading image:', error);
+                    this.showError('Failed to upload image. You can still submit without a photo.');
+                }
+            }
+
+            async submitTestimonial() {
+                if (!this.validateForm()) return;
+
+                this.setLoading(true);
+                this.hideMessages();
+
+                try {
+                    const testimonialData = {
+                        rating: this.currentRating,
+                        testimonial_text: this.testimonialText.value.trim(),
+                        author_name: this.nameInput.value.trim(),
+                        author_title: this.titleInput.value.trim() || null,
+                        author_email: this.emailInput.value.trim() || null,
+                        author_image_url: this.uploadedImageUrl,
+                        ip_address: await this.getClientIP(),
+                        user_agent: navigator.userAgent,
+                        source: 'customer_submission'
+                    };
+
+                    if (this.supabase) {
+                        // Submit to Supabase
+                        const { data, error } = await this.supabase
+                            .from('testimonials')
+                            .insert([testimonialData])
+                            .select();
+
+                        if (error) throw error;
+
+                        // Send email notification
+                        await this.sendEmailNotification(testimonialData);
+                        
+                        this.showSuccess();
+                        this.resetForm();
+                    } else {
+                        // Fallback: Send via EmailJS
+                        await this.sendEmailFallback(testimonialData);
+                        this.showSuccess();
+                        this.resetForm();
+                    }
+                } catch (error) {
+                    console.error('Submission error:', error);
+                    this.showError('Failed to submit testimonial. Please try again.');
+                } finally {
+                    this.setLoading(false);
+                }
+            }
+
+            validateForm() {
+                if (this.currentRating === 0) {
+                    this.showError('Please select a rating');
+                    return false;
+                }
+
+                if (!this.testimonialText.value.trim()) {
+                    this.showError('Please share your experience');
+                    return false;
+                }
+
+                if (!this.nameInput.value.trim()) {
+                    this.showError('Please enter your name');
+                    return false;
+                }
+
+                if (this.emailInput.value && !this.isValidEmail(this.emailInput.value)) {
+                    this.showError('Please enter a valid email address');
+                    return false;
+                }
+
+                return true;
+            }
+
+            isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            async getClientIP() {
+                try {
+                    const response = await fetch('https://api.ipify.org?format=json');
+                    const data = await response.json();
+                    return data.ip;
+                } catch (error) {
+                    return null;
+                }
+            }
+
+            async sendEmailNotification(testimonialData) {
+                if (!window.EMAIL_CONFIG || !window.EMAIL_CONFIG.emailjsConfig.serviceId) {
+                    return;
+                }
+
+                try {
+                    const templateParams = {
+                        to_email: window.EMAIL_CONFIG.adminEmail,
+                        from_name: testimonialData.author_name,
+                        rating: testimonialData.rating,
+                        testimonial: testimonialData.testimonial_text,
+                        author_name: testimonialData.author_name,
+                        author_title: testimonialData.author_title || 'Not provided',
+                        author_email: testimonialData.author_email || 'Not provided',
+                        submission_date: new Date().toLocaleDateString(),
+                        admin_url: `${window.location.origin}/admin`
+                    };
+
+                    await emailjs.send(
+                        window.EMAIL_CONFIG.emailjsConfig.serviceId,
+                        window.EMAIL_CONFIG.emailjsConfig.templateId,
+                        templateParams
+                    );
+                } catch (error) {
+                    console.error('Email notification failed:', error);
+                }
+            }
+
+            async sendEmailFallback(testimonialData) {
+                // Fallback email sending via EmailJS when Supabase is not configured
+                await this.sendEmailNotification(testimonialData);
+            }
+
+            setLoading(loading) {
+                this.submitBtn.disabled = loading;
+                if (loading) {
+                    this.loadingSpinner.style.display = 'block';
+                    this.submitIcon.style.display = 'none';
+                    this.submitText.textContent = 'Submitting...';
+                } else {
+                    this.loadingSpinner.style.display = 'none';
+                    this.submitIcon.style.display = 'block';
+                    this.submitText.textContent = 'Submit Testimonial';
+                }
+            }
+
+            showSuccess() {
+                this.successMessage.style.display = 'block';
+                this.successMessage.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            showError(message) {
+                this.errorText.textContent = message;
+                this.errorMessage.style.display = 'block';
+                this.errorMessage.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            hideMessages() {
+                this.successMessage.style.display = 'none';
+                this.errorMessage.style.display = 'none';
+            }
+
+            resetForm() {
+                this.form.reset();
+                this.currentRating = 0;
+                this.uploadedImageUrl = null;
+                this.ratingValue.value = '';
+                this.ratingText.textContent = 'Click to rate';
+                this.charCount.textContent = '0';
+                this.photoPreview.style.display = 'none';
+                
+                // Reset stars
+                this.ratingStars.forEach(star => {
+                    const icon = star.querySelector('i');
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    star.classList.remove('active');
+                });
+            }
+        }
+
+        // Initialize the testimonial submission system
+        document.addEventListener('DOMContentLoaded', () => {
+            new TestimonialSubmission();
+        });
+    </script>
+</body>
+</html>
