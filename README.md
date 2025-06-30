@@ -1,5 +1,7 @@
 # Social Proof Generator
 
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/dubd59/Social-Proof-Generator)
+
 A professional, full-stack web application for creating, managing, and collecting customer testimonials with star ratings. Features a modern sidebar interface, real-time notifications, and complete backend integration.
 
 ## ✨ Features
