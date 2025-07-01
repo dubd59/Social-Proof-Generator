@@ -113,8 +113,8 @@ exports.handler = async (event, context) => {
         const testimonialData = {
             organization_id: organizations.id,
             customer_name: author_name.trim(),
-            customer_email: author_email?.trim() || '',
-            customer_title: author_title?.trim() || '',
+            customer_email: author_email?.trim() || null,
+            customer_title: author_title?.trim() || null,
             customer_avatar_url: author_image_url || null,
             rating,
             content: testimonial_text.trim(),
