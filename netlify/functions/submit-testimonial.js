@@ -112,15 +112,15 @@ exports.handler = async (event, context) => {
         // Insert testimonial into database
         const testimonialData = {
             organization_id: organizations.id,
-            author_name: author_name.trim(),
-            author_email: author_email?.trim() || null,
-            author_title: author_title?.trim() || null,
-            author_image_url: author_image_url || null,
+            customer_name: author_name.trim(),
+            customer_email: author_email?.trim() || '',
+            customer_title: author_title?.trim() || '',
+            customer_avatar_url: author_image_url || null,
             rating,
-            testimonial_text: testimonial_text.trim(),
+            content: testimonial_text.trim(),
             status: 'pending', // Require manual approval
-            source: 'customer_submission',
-            ip_address: clientIP,
+            source_url: event.headers.referer || null,
+            source_ip: clientIP,
             user_agent: event.headers['user-agent'] || null
         };
 
@@ -196,14 +196,14 @@ async function sendNotificationEmail(testimonialData, testimonialId) {
                     <div style="margin: 20px 0;">
                         <strong>Testimonial:</strong>
                         <p style="background: #f7fafc; padding: 15px; border-radius: 5px; font-style: italic; border-left: 3px solid #38beba;">
-                            "${testimonialData.testimonial_text}"
+                            "${testimonialData.content}"
                         </p>
                     </div>
                     
                     <div style="margin: 20px 0;">
-                        <strong>Customer:</strong> ${testimonialData.author_name}
-                        ${testimonialData.author_title ? `<br><strong>Position:</strong> ${testimonialData.author_title}` : ''}
-                        ${testimonialData.author_email ? `<br><strong>Email:</strong> ${testimonialData.author_email}` : ''}
+                        <strong>Customer:</strong> ${testimonialData.customer_name}
+                        ${testimonialData.customer_title ? `<br><strong>Position:</strong> ${testimonialData.customer_title}` : ''}
+                        ${testimonialData.customer_email ? `<br><strong>Email:</strong> ${testimonialData.customer_email}` : ''}
                     </div>
                     
                     <div style="margin: 20px 0; padding: 15px; background: #e6fffa; border-radius: 5px;">
@@ -233,7 +233,7 @@ async function sendNotificationEmail(testimonialData, testimonialId) {
     const mailOptions = {
         from: process.env.FROM_EMAIL || process.env.SMTP_USER,
         to: process.env.ADMIN_EMAIL,
-        subject: `⭐ New ${testimonialData.rating}-Star Testimonial from ${testimonialData.author_name}`,
+        subject: `⭐ New ${testimonialData.rating}-Star Testimonial from ${testimonialData.customer_name}`,
         html: emailHtml
     };
 

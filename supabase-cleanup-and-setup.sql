@@ -84,7 +84,7 @@ CREATE TABLE testimonials (
     
     -- Customer information
     customer_name VARCHAR(255) NOT NULL,
-    customer_email VARCHAR(255) NOT NULL,
+    customer_email VARCHAR(255),
     customer_company VARCHAR(255),
     customer_title VARCHAR(255),
     customer_avatar_url TEXT,
