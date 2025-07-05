@@ -2,20 +2,20 @@
 // Replace these with your actual Supabase project credentials
 
 const SUPABASE_CONFIG = {
-    url: 'https://your-project-id.supabase.co', // Replace with your Supabase URL
-    anonKey: 'your-anon-key-here', // Replace with your Supabase anon key
-    serviceRoleKey: 'your-service-role-key-here' // Replace with your service role key (for admin functions)
+    url: process.env.SUPABASE_URL || 'https://your-project-id.supabase.co', // Replace with your Supabase URL
+    anonKey: process.env.SUPABASE_ANON_KEY || 'your-anon-key-here', // Replace with your Supabase anon key
+    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || 'your-service-role-key-here' // Replace with your service role key (for admin functions)
 };
 
 // Email notification settings
 const EMAIL_CONFIG = {
-    adminEmail: 'your-email@example.com', // Replace with your email
-    fromEmail: 'noreply@your-domain.com', // Replace with your from email
+    adminEmail: process.env.ADMIN_EMAIL || 'your-email@example.com', // Replace with your email
+    fromEmail: process.env.FROM_EMAIL || 'noreply@your-domain.com', // Replace with your from email
     emailService: 'emailjs', // or 'netlify' for Netlify Functions with SendGrid/Mailgun
     emailjsConfig: {
-        serviceId: 'your-emailjs-service-id',
-        templateId: 'your-emailjs-template-id',
-        publicKey: 'your-emailjs-public-key'
+        serviceId: process.env.EMAILJS_SERVICE_ID || 'your-emailjs-service-id',
+        templateId: process.env.EMAILJS_TEMPLATE_ID || 'your-emailjs-template-id',
+        publicKey: process.env.EMAILJS_PUBLIC_KEY || 'your-emailjs-public-key'
     }
 };
 

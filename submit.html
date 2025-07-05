@@ -308,7 +308,7 @@
         <div class="form-container">
             <div class="success-message" id="success-message">
                 <i class="fas fa-check-circle"></i>
-                Thank you for your testimonial! We'll review it and get back to you soon.
+                <span id="success-text">Thank you for your testimonial! We'll review it and get back to you soon.</span>
             </div>
 
             <div class="error-message" id="error-message">
@@ -410,6 +410,14 @@
         </div>
     </div>
 
+    <!-- Configuration Status Indicator -->
+    <div id="config-status" style="position: fixed; top: 10px; right: 10px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 10px; font-size: 12px; z-index: 1000; max-width: 250px;">
+        <div style="font-weight: 600; margin-bottom: 5px;">🔧 Configuration Status</div>
+        <div id="supabase-status">📊 Supabase: <span style="color: #dc3545;">Not configured</span></div>
+        <div id="email-status">📧 Email: <span style="color: #dc3545;">Not configured</span></div>
+        <div id="mode-status">🎮 Mode: <span style="color: #28a745;">Demo Mode</span></div>
+    </div>
+
     <!-- Include Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Include EmailJS for notifications -->
@@ -428,20 +436,46 @@
                 this.initElements();
                 this.initEventListeners();
                 this.initEmailJS();
+                this.updateConfigStatus();
             }
 
             initSupabase() {
-                if (window.SUPABASE_CONFIG) {
-                    this.supabase = supabase.createClient(
-                        window.SUPABASE_CONFIG.url, 
-                        window.SUPABASE_CONFIG.anonKey
-                    );
+                if (window.SUPABASE_CONFIG && 
+                    window.SUPABASE_CONFIG.url !== 'https://your-project-id.supabase.co' &&
+                    window.SUPABASE_CONFIG.anonKey !== 'your-anon-key-here') {
+                    try {
+                        this.supabase = supabase.createClient(
+                            window.SUPABASE_CONFIG.url, 
+                            window.SUPABASE_CONFIG.anonKey
+                        );
+                        console.log('✅ Supabase client initialized');
+                        document.getElementById('supabase-status').innerHTML = '📊 Supabase: <span style="color: #28a745;">Configured</span>';
+                    } catch (error) {
+                        console.error('❌ Supabase initialization failed:', error);
+                        this.supabase = null;
+                        document.getElementById('supabase-status').innerHTML = '📊 Supabase: <span style="color: #dc3545;">Error</span>';
+                    }
+                } else {
+                    console.log('⚠️ Supabase not configured, using fallback mode');
+                    this.supabase = null;
+                    document.getElementById('supabase-status').innerHTML = '📊 Supabase: <span style="color: #dc3545;">Not configured</span>';
                 }
             }
 
             initEmailJS() {
-                if (window.EMAIL_CONFIG && window.EMAIL_CONFIG.emailjsConfig.publicKey) {
-                    emailjs.init(window.EMAIL_CONFIG.emailjsConfig.publicKey);
+                if (window.EMAIL_CONFIG && 
+                    window.EMAIL_CONFIG.emailjsConfig.publicKey !== 'your-emailjs-public-key') {
+                    try {
+                        emailjs.init(window.EMAIL_CONFIG.emailjsConfig.publicKey);
+                        console.log('✅ EmailJS initialized');
+                        document.getElementById('email-status').innerHTML = '📧 Email: <span style="color: #28a745;">Configured</span>';
+                    } catch (error) {
+                        console.error('❌ EmailJS initialization failed:', error);
+                        document.getElementById('email-status').innerHTML = '📧 Email: <span style="color: #dc3545;">Error</span>';
+                    }
+                } else {
+                    console.log('⚠️ EmailJS not configured');
+                    document.getElementById('email-status').innerHTML = '📧 Email: <span style="color: #dc3545;">Not configured</span>';
                 }
             }
 
@@ -463,6 +497,7 @@
                 this.submitIcon = document.getElementById('submit-icon');
                 this.loadingSpinner = document.getElementById('loading-spinner');
                 this.successMessage = document.getElementById('success-message');
+                this.successText = document.getElementById('success-text');
                 this.errorMessage = document.getElementById('error-message');
                 this.errorText = document.getElementById('error-text');
             }
@@ -636,8 +671,9 @@
                         this.showSuccess();
                         this.resetForm();
                     } else {
-                        // Fallback: Send via EmailJS
-                        await this.sendEmailFallback(testimonialData);
+                        // Fallback: Save to localStorage for demo/testing
+                        console.log('💾 Saving to localStorage (demo mode)');
+                        await this.saveToDemoStorage(testimonialData);
                         this.showSuccess();
                         this.resetForm();
                     }
@@ -717,7 +753,29 @@
 
             async sendEmailFallback(testimonialData) {
                 // Fallback email sending via EmailJS when Supabase is not configured
-                await this.sendEmailNotification(testimonialData);
+                if (window.EMAIL_CONFIG && 
+                    window.EMAIL_CONFIG.emailjsConfig.publicKey !== 'your-emailjs-public-key') {
+                    await this.sendEmailNotification(testimonialData);
+                } else {
+                    console.log('📧 Email notifications not configured');
+                }
+            }
+
+            async saveToDemoStorage(testimonialData) {
+                // Save to localStorage for demo/testing purposes
+                const testimonials = JSON.parse(localStorage.getItem('demo_testimonials') || '[]');
+                const testimonialWithId = {
+                    ...testimonialData,
+                    id: Date.now(),
+                    created_at: new Date().toISOString(),
+                    status: 'pending'
+                };
+                testimonials.push(testimonialWithId);
+                localStorage.setItem('demo_testimonials', JSON.stringify(testimonials));
+                console.log('💾 Testimonial saved to demo storage:', testimonialWithId);
+                
+                // Simulate a small delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
             }
 
             setLoading(loading) {
@@ -734,6 +792,14 @@
             }
 
             showSuccess() {
+                let message = "Thank you for your testimonial!";
+                if (this.supabase) {
+                    message += " It has been saved to our database and will be reviewed by our team.";
+                } else {
+                    message += " It has been saved in demo mode. In production, this would be stored in the database.";
+                }
+                
+                this.successText.textContent = message;
                 this.successMessage.style.display = 'block';
                 this.successMessage.scrollIntoView({ behavior: 'smooth' });
             }
@@ -765,6 +831,33 @@
                     icon.classList.add('far');
                     star.classList.remove('active');
                 });
+            }
+
+            updateConfigStatus() {
+                const supabaseStatus = document.getElementById('supabase-status');
+                const emailStatus = document.getElementById('email-status');
+                const modeStatus = document.getElementById('mode-status');
+                
+                // Update Supabase status
+                if (this.supabase) {
+                    supabaseStatus.innerHTML = '📊 Supabase: <span style="color: #28a745;">Connected</span>';
+                } else {
+                    supabaseStatus.innerHTML = '📊 Supabase: <span style="color: #dc3545;">Demo Mode</span>';
+                }
+                
+                // Update Email status
+                if (window.EMAIL_CONFIG && window.EMAIL_CONFIG.emailjsConfig.publicKey !== 'your-emailjs-public-key') {
+                    emailStatus.innerHTML = '📧 Email: <span style="color: #28a745;">Configured</span>';
+                } else {
+                    emailStatus.innerHTML = '📧 Email: <span style="color: #dc3545;">Not configured</span>';
+                }
+                
+                // Update mode
+                if (this.supabase) {
+                    modeStatus.innerHTML = '🚀 Mode: <span style="color: #28a745;">Production</span>';
+                } else {
+                    modeStatus.innerHTML = '🎮 Mode: <span style="color: #17a2b8;">Demo Mode</span>';
+                }
             }
         }
 

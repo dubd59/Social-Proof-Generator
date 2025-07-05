@@ -849,14 +849,23 @@ class SocialProofGenerator {
 
     initSupabase() {
         // Initialize Supabase if config is available
-        if (window.SUPABASE_CONFIG && window.supabase) {
-            this.supabase = supabase.createClient(
-                window.SUPABASE_CONFIG.url, 
-                window.SUPABASE_CONFIG.anonKey
-            );
-            console.log('Supabase initialized');
+        if (window.SUPABASE_CONFIG && 
+            window.SUPABASE_CONFIG.url !== 'https://your-project-id.supabase.co' &&
+            window.SUPABASE_CONFIG.anonKey !== 'your-anon-key-here' &&
+            window.supabase) {
+            try {
+                this.supabase = supabase.createClient(
+                    window.SUPABASE_CONFIG.url, 
+                    window.SUPABASE_CONFIG.anonKey
+                );
+                console.log('✅ Supabase initialized for admin panel');
+            } catch (error) {
+                console.error('❌ Supabase initialization failed:', error);
+                this.supabase = null;
+            }
         } else {
-            console.log('Supabase not configured - running in offline mode');
+            console.log('⚠️ Supabase not configured - running in demo mode');
+            this.supabase = null;
         }
     }
 
@@ -866,13 +875,41 @@ class SocialProofGenerator {
                 // Load from Supabase
                 await this.syncFromDatabase();
             } else {
-                // Load sample data if no backend
-                this.loadSampleData();
+                // Check for demo data in localStorage first
+                const demoTestimonials = JSON.parse(localStorage.getItem('demo_testimonials') || '[]');
+                if (demoTestimonials.length > 0) {
+                    this.loadDemoData(demoTestimonials);
+                } else {
+                    // Load sample data if no backend and no demo data
+                    this.loadSampleData();
+                }
             }
         } catch (error) {
             console.error('Failed to load testimonials:', error);
             this.loadSampleData(); // Fallback to sample data
         }
+    }
+
+    loadDemoData(demoTestimonials) {
+        // Convert demo testimonials from localStorage to app format
+        this.testimonials = demoTestimonials.map(item => ({
+            id: item.id,
+            rating: item.rating,
+            text: item.testimonial_text,
+            author: item.author_name,
+            title: item.author_title || '',
+            image: item.author_image_url || '',
+            email: item.author_email || '',
+            isApproved: item.status === 'approved',
+            isFeatured: false,
+            createdAt: item.created_at,
+            source: item.source || 'demo'
+        }));
+
+        this.renderTestimonials();
+        this.updateStats();
+        this.updatePreview();
+        this.showNotification(`Loaded ${demoTestimonials.length} testimonial(s) from demo storage`, 'info');
     }
 
     async syncFromDatabase() {
