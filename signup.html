@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Your Free Trial - SocialProof Studio</title>
+    <meta name="description" content="Start your 14-day free trial of SocialProof Studio. No credit card required.">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #38beba;
+            --primary-dark: #2a9a96;
+            --success: #10b981;
+            --error: #ef4444;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #ffffff;
+            --bg-light: #f7fafc;
+            --border: #e2e8f0;
+            --gradient: linear-gradient(135deg, #38beba 0%, #2dd4bf 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .signup-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            width: 100%;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 600px;
+        }
+
+        .signup-left {
+            background: var(--gradient);
+            color: white;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .signup-right {
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+
+        .signup-left h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .signup-left p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .benefits {
+            list-style: none;
+        }
+
+        .benefits li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .benefits li i {
+            margin-right: 15px;
+            font-size: 18px;
+        }
+
+        .signup-form h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .signup-form .subtitle {
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(56, 190, 186, 0.1);
+        }
+
+        .plan-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .plan-option {
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .plan-option:hover {
+            border-color: var(--primary);
+        }
+
+        .plan-option.selected {
+            border-color: var(--primary);
+            background: rgba(56, 190, 186, 0.05);
+        }
+
+        .plan-option.featured::before {
+            content: 'POPULAR';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .plan-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .plan-name {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .plan-description {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(56, 190, 186, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .trust-indicators {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 20px;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: var(--error);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: var(--success);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .signup-container {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+            
+            .signup-left {
+                padding: 40px 30px;
+            }
+            
+            .signup-right {
+                padding: 40px 30px;
+            }
+            
+            .plan-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-left">
+            <div class="logo">
+                <i class="fas fa-quote-left"></i>
+                SocialProof Studio
+            </div>
+            
+            <h1>Start Building Social Proof Today</h1>
+            <p>Join thousands of businesses using our platform to showcase customer testimonials and boost conversions.</p>
+            
+            <ul class="benefits">
+                <li><i class="fas fa-check-circle"></i> 14-day free trial</li>
+                <li><i class="fas fa-check-circle"></i> No credit card required</li>
+                <li><i class="fas fa-check-circle"></i> Cancel anytime</li>
+                <li><i class="fas fa-check-circle"></i> Full access to all features</li>
+                <li><i class="fas fa-check-circle"></i> Priority email support</li>
+            </ul>
+        </div>
+        
+        <div class="signup-right">
+            <div class="signup-form">
+                <h2>Create Your Account</h2>
+                <p class="subtitle">Get started with your free trial today</p>
+                
+                <div class="error-message" id="error-message"></div>
+                <div class="success-message" id="success-message"></div>
+                
+                <form id="signup-form">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="company">Company Name (Optional)</label>
+                        <input type="text" id="company" name="company">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Choose Your Plan</label>
+                        <div class="plan-selector">
+                            <div class="plan-option" data-plan="free">
+                                <div class="plan-price">$0</div>
+                                <div class="plan-name">Free</div>
+                                <div class="plan-description">Up to 5 testimonials</div>
+                            </div>
+                            <div class="plan-option featured selected" data-plan="pro">
+                                <div class="plan-price">$9</div>
+                                <div class="plan-name">Pro</div>
+                                <div class="plan-description">Unlimited testimonials</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn" id="signup-btn">
+                        <span id="btn-text">Start Free Trial</span>
+                        <div class="loading" id="loading">
+                            <div class="spinner"></div>
+                            <span>Creating account...</span>
+                        </div>
+                    </button>
+                </form>
+                
+                <div class="trust-indicators">
+                    <div><i class="fas fa-shield-alt"></i> Secure</div>
+                    <div><i class="fas fa-lock"></i> Encrypted</div>
+                    <div><i class="fas fa-credit-card"></i> No card required</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stripe Integration -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        // Initialize Stripe (you'll need to replace with your actual publishable key)
+        const stripe = Stripe('pk_test_your_stripe_publishable_key_here');
+        
+        let selectedPlan = 'pro';
+        
+        // Plan selection logic
+        document.querySelectorAll('.plan-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.plan-option').forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                selectedPlan = option.dataset.plan;
+                
+                const btnText = document.getElementById('btn-text');
+                if (selectedPlan === 'free') {
+                    btnText.textContent = 'Create Free Account';
+                } else {
+                    btnText.textContent = 'Start Free Trial';
+                }
+            });
+        });
+        
+        // Form submission
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const userData = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                company: formData.get('company'),
+                plan: selectedPlan
+            };
+            
+            setLoading(true);
+            hideMessages();
+            
+            try {
+                if (selectedPlan === 'free') {
+                    // Create free account
+                    await createFreeAccount(userData);
+                } else {
+                    // Start paid trial
+                    await startPaidTrial(userData);
+                }
+            } catch (error) {
+                console.error('Signup error:', error);
+                showError('Failed to create account. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        });
+        
+        async function createFreeAccount(userData) {
+            // For now, simulate account creation
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Store user data in localStorage for demo
+            localStorage.setItem('user_account', JSON.stringify({
+                ...userData,
+                id: Date.now(),
+                created_at: new Date().toISOString(),
+                status: 'active',
+                trial_ends: null
+            }));
+            
+            showSuccess('Free account created successfully! Redirecting to dashboard...');
+            
+            setTimeout(() => {
+                window.location.href = '/admin';
+            }, 2000);
+        }
+        
+        async function startPaidTrial(userData) {
+            // For demo purposes, we'll simulate the Stripe flow
+            // In production, you would create a Stripe customer and subscription
+            
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Store user data with trial info
+            const trialEnd = new Date();
+            trialEnd.setDate(trialEnd.getDate() + 14);
+            
+            localStorage.setItem('user_account', JSON.stringify({
+                ...userData,
+                id: Date.now(),
+                created_at: new Date().toISOString(),
+                status: 'trial',
+                trial_ends: trialEnd.toISOString(),
+                stripe_customer_id: 'cus_demo_' + Date.now()
+            }));
+            
+            showSuccess('Trial started successfully! Redirecting to dashboard...');
+            
+            setTimeout(() => {
+                window.location.href = '/admin';
+            }, 2000);
+        }
+        
+        function setLoading(loading) {
+            const btn = document.getElementById('signup-btn');
+            const btnText = document.getElementById('btn-text');
+            const loadingEl = document.getElementById('loading');
+            
+            btn.disabled = loading;
+            btnText.style.display = loading ? 'none' : 'block';
+            loadingEl.style.display = loading ? 'flex' : 'none';
+        }
+        
+        function showError(message) {
+            const errorEl = document.getElementById('error-message');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+        
+        function showSuccess(message) {
+            const successEl = document.getElementById('success-message');
+            successEl.textContent = message;
+            successEl.style.display = 'block';
+        }
+        
+        function hideMessages() {
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('success-message').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

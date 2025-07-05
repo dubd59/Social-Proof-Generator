@@ -1,9 +1,13 @@
 [build]
-  publish = "."
-  command = "echo 'No build step required'"
+  p[[redirects]]
+  from = "/"
+  to = "/landing.html"
+  status = 200
 
-[build.environment]
-  NODE_VERSION = "18"
+[[redirects]]
+  from = "/signup"
+  to = "/signup.html"
+  status = 200
 
 [[redirects]]
   from = "/admin"
@@ -13,6 +17,34 @@
 [[redirects]]
   from = "/submit"
   to = "/submit.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/landing.html"
+  status = 404  command = "echo 'No build step required'"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/"
+  to = "/landing.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/submit"
+  to = "/submit.html"
+  status = 200
+
+[[redirects]]
+  from = "/app"
+  to = "/index.html"
   status = 200
 
 [[redirects]]
